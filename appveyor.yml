@@ -2,9 +2,11 @@ environment:
   matrix:
   # MSVC
   - GENERATOR: Visual Studio 14 2015
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    VCVARSARG: x86
   - GENERATOR: Visual Studio 14 2015 Win64
-  - GENERATOR: Visual Studio 12 2013
-  - GENERATOR: Visual Studio 12 2013 Win64
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    VCVARSARG: amd64
 
   # Mingw-w64
   - GENERATOR: MinGW Makefiles
@@ -35,15 +37,12 @@ clone_script:
   - git submodule -q update --init --recursive
   
 before_build:
-  - ps: |
-      mkdir build
-      cd build
-      echo $env:TOOLSET
-      echo $env:GENERATOR
-      echo $env:CONFIGURATION
-      cmake -T "$env:TOOLSET" -G "$env:GENERATOR" -DCMAKE_BUILD_TYPE="$env:CONFIGURATION" ..
-      cat C:/projects/skui/build/CMakeFiles/CMakeOutput.log
-      cat C:/projects/skui/build/CMakeFiles/CMakeError.log
+  - mkdir build
+  - cd build
+  - call "%VCVARS%" %VCVARSARG%
+  - cmake -T "%TOOLSET%" -G "%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" ..
+  - cat CMakeFiles\CMakeOutput.log
+  - cat CMakeFiles\CMakeError.log
 
 build_script:
   - if "%GENERATOR%" == "MinGW Makefiles" ( mingw32-make VERBOSE=1 ) else ( cmake --build . --config %CONFIGURATION% )
