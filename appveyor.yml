@@ -10,7 +10,7 @@ environment:
 
   # Mingw-w64
   - GENERATOR: MinGW Makefiles
-    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\bin
+    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\bin;%PATH%
 
   # Clang/C2
   # Has issues: https://github.com/quixdb/squash/issues/185
@@ -28,6 +28,7 @@ environment:
 
   # Clang targeting mingw-w64
   - GENERATOR: MinGW Makefiles
+    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\bin;%PATH%
     CC: clang --target=x86_64-w64-mingw32
     CXX: clang++ --target=x86_64-w64-mingw32
     
