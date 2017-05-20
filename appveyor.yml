@@ -41,8 +41,6 @@ before_build:
   - cd build
   - call "%VCVARS%" %VCVARSARG%
   - cmake -T "%TOOLSET%" -G "%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" ..
-  - cat CMakeFiles\CMakeOutput.log
-  - cat CMakeFiles\CMakeError.log
 
 build_script:
   - if "%GENERATOR%" == "MinGW Makefiles" ( mingw32-make VERBOSE=1 ) else ( cmake --build . --config %CONFIGURATION% )
