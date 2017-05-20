@@ -10,21 +10,17 @@ environment:
 
   # Mingw-w64
   - GENERATOR: MinGW Makefiles
-    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\bin;%PATH%
+    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
 
   # Clang/C2
-  # Has issues: https://github.com/quixdb/squash/issues/185
-  # Also, waiting on CMake 3.6.0 for toolset support
   - GENERATOR: Visual Studio 14 2015 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
-    TOOLSET: v140_clang_3_7
+    CMAKE_ARGS: -T"v140_clang_3_7"
 
   # Clang targeting MSVC
-  # See https://ci.appveyor.com/project/quixdb/squash/build/532
-  # vs. https://ci.appveyor.com/project/quixdb/squash/build/524
   # - GENERATOR: Visual Studio 14 2015 Win64
-  #   TOOLSET: LLVM-vs2014
+  #   CMAKE_ARGS: -T"LLVM-vs2014"
 
   # Clang targeting mingw-w64
   - GENERATOR: MinGW Makefiles
@@ -45,9 +41,9 @@ before_build:
   - cd build
   - if defined (VCVARS) call "%VCVARS%" %VCVARSARG%
   - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
-  - dir C:\mingw-w64
+  - set PATH
   - cmake --version
-  - cmake -T "%TOOLSET%" -G "%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || cat CMakeFiles/CMakeError.log
+  - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || type CMakeFiles/CMakeError.log
 
 build_script:
   - if "%GENERATOR%" == "MinGW Makefiles" ( mingw32-make VERBOSE=1 ) else ( cmake --build . --config %CONFIGURATION% )
