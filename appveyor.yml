@@ -10,12 +10,15 @@ environment:
 
   # Mingw-w64
   - GENERATOR: MinGW Makefiles
+    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\bin
 
   # Clang/C2
   # Has issues: https://github.com/quixdb/squash/issues/185
   # Also, waiting on CMake 3.6.0 for toolset support
-  # - GENERATOR: Visual Studio 14 2015 Win64
-  #   TOOLSET: v140_clang_3_7
+  - GENERATOR: Visual Studio 14 2015 Win64
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    VCVARSARG: amd64
+    TOOLSET: v140_clang_3_7
 
   # Clang targeting MSVC
   # See https://ci.appveyor.com/project/quixdb/squash/build/532
@@ -39,7 +42,7 @@ clone_script:
 before_build:
   - mkdir build
   - cd build
-  - call "%VCVARS%" %VCVARSARG%
+  - if defined (VCVARS) call "%VCVARS%" %VCVARSARG%
   - cmake -T "%TOOLSET%" -G "%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" ..
 
 build_script:
