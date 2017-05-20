@@ -44,7 +44,10 @@ before_build:
   - mkdir build
   - cd build
   - if defined (VCVARS) call "%VCVARS%" %VCVARSARG%
-  - cmake -T "%TOOLSET%" -G "%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" ..
+  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+  - dir C:\mingw-w64
+  - cmake --version
+  - cmake -T "%TOOLSET%" -G "%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || cat CMakeFiles/CMakeError.log
 
 build_script:
   - if "%GENERATOR%" == "MinGW Makefiles" ( mingw32-make VERBOSE=1 ) else ( cmake --build . --config %CONFIGURATION% )
