@@ -13,20 +13,22 @@ environment:
     PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
 
   # Clang/C2
-  - GENERATOR: Visual Studio 14 2015 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -T"v140_clang_3_7"
+  #- GENERATOR: Visual Studio 14 2015 Win64
+  #  VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+  #  VCVARSARG: amd64
+  #  PATH: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\
+  #  CMAKE_ARGS: -T"v140_clang_3_7"
 
   # Clang targeting MSVC
-  # - GENERATOR: Visual Studio 14 2015 Win64
-  #   CMAKE_ARGS: -T"LLVM-vs2014"
+  - GENERATOR: NMake Makefiles
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    VCVARSARG: x86
+    CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19"
 
   # Clang targeting mingw-w64
   - GENERATOR: MinGW Makefiles
-    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\bin;%PATH%
-    CC: clang --target=x86_64-w64-mingw32
-    CXX: clang++ --target=x86_64-w64-mingw32
+    PATH: C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
+    CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS=--target=x86_64-w64-mingw32 -DCMAKE_C_COMPILER=clang -DCMAKE_C_FLAGS=--target=x86_64-w64-mingw32 
     
 configuration: Debug
 
@@ -43,7 +45,7 @@ before_build:
   - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - set PATH
   - cmake --version
-  - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || type CMakeFiles/CMakeError.log
+  - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || (type CMakeFiles\CMakeError.log && type CMakeFiles\CMakeOutput.log && exit 1)
 
 build_script:
   - if "%GENERATOR%" == "MinGW Makefiles" ( mingw32-make VERBOSE=1 ) else ( cmake --build . --config %CONFIGURATION% )
