@@ -1,0 +1,52 @@
+environment:
+  matrix:
+  # MSVC
+  - GENERATOR: Visual Studio 14 2015
+  - GENERATOR: Visual Studio 14 2015 Win64
+  - GENERATOR: Visual Studio 12 2013
+  - GENERATOR: Visual Studio 12 2013 Win64
+
+  # Mingw-w64
+  - GENERATOR: MinGW Makefiles
+
+  # Clang/C2
+  # Has issues: https://github.com/quixdb/squash/issues/185
+  # Also, waiting on CMake 3.6.0 for toolset support
+  # - GENERATOR: Visual Studio 14 2015 Win64
+  #   TOOLSET: v140_clang_3_7
+
+  # Clang targeting MSVC
+  # See https://ci.appveyor.com/project/quixdb/squash/build/532
+  # vs. https://ci.appveyor.com/project/quixdb/squash/build/524
+  # - GENERATOR: Visual Studio 14 2015 Win64
+  #   TOOLSET: LLVM-vs2014
+
+  # Clang targeting mingw-w64
+  - GENERATOR: MinGW Makefiles
+    CC: clang --target=x86_64-w64-mingw32
+    CXX: clang++ --target=x86_64-w64-mingw32
+    
+configuration: Debug
+
+clone_script:
+  - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/rubenvb/ci-playground.git %APPVEYOR_BUILD_FOLDER%
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - git checkout -qf %APPVEYOR_REPO_COMMIT%
+  - git submodule -q update --init --recursive
+  
+before_build:
+  - ps: |
+      mkdir build
+      cd build
+      echo $env:TOOLSET
+      echo $env:GENERATOR
+      echo $env:CONFIGURATION
+      cmake -T "$env:TOOLSET" -G "$env:GENERATOR" -DCMAKE_BUILD_TYPE="$env:CONFIGURATION" ..
+      cat C:/projects/skui/build/CMakeFiles/CMakeOutput.log
+      cat C:/projects/skui/build/CMakeFiles/CMakeError.log
+
+build_script:
+  - if "%GENERATOR%" == "MinGW Makefiles" ( mingw32-make VERBOSE=1 ) else ( cmake --build . --config %CONFIGURATION% )
+
+test_script:
+  - ctest --output-on-failure -C %config%
