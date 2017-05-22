@@ -22,7 +22,7 @@ environment:
   # Clang targeting MSVC
   - GENERATOR: NMake Makefiles
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: x86
+    VCVARSARG: amd64
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19"
 
   # Clang targeting mingw-w64
