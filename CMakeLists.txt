@@ -4,5 +4,5 @@ project(ci-playground)
 set(CMAKE_CXX_STANDARD_REQUIRED 14)
 
 add_executable(playground playground.c++)
-message(STATUS "CMake Platform ID: ${CMAKE_CXX_PLATFORM_ID})
+message(STATUS "CMake Platform ID: ${CMAKE_CXX_PLATFORM_ID}")
 target_compile_options(playground PUBLIC $<$<CXX_COMPILER_ID:Clang>:-std=c++14>)

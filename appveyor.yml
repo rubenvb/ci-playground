@@ -23,7 +23,7 @@ environment:
   - GENERATOR: NMake Makefiles
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
-    CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19"
+    CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19" -DCMAKE_C_FLAGS="-fms-compatibility-version=19"
 
   # Clang targeting mingw-w64
   - GENERATOR: MinGW Makefiles
@@ -48,7 +48,7 @@ before_build:
   - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || (type CMakeFiles\CMakeError.log && type CMakeFiles\CMakeOutput.log && exit 1)
 
 build_script:
-  - if "%GENERATOR%" == "MinGW Makefiles" ( mingw32-make VERBOSE=1 ) else ( cmake --build . --config %CONFIGURATION% )
+  - cmake --build . --config %CONFIGURATION% --verbose
 
 test_script:
   - ctest --output-on-failure -C %config%
