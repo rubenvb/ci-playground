@@ -3,6 +3,10 @@ project(ci-playground)
 
 set(CMAKE_CXX_STANDARD_REQUIRED 14)
 
+if(MINGW)
+  find_package(Boost COMPONENTS regex system filesystem REQUIRED)
+endif()
+
 add_executable(playground playground.c++)
 message(STATUS "CMake Platform ID: ${CMAKE_CXX_PLATFORM_ID}")
 target_compile_options(playground PUBLIC $<$<CXX_COMPILER_ID:Clang>:-std=c++14>)
