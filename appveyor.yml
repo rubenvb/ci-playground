@@ -20,10 +20,10 @@ environment:
     CMAKE_ARGS: -T"v140_clang_c2"
 
   # Clang targeting MSVC
-  - GENERATOR: MinGW Makefiles
+  - GENERATOR: Visual Studio 14 2015 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
-    CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/bin/clang++.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/bin/clang.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19" -DCMAKE_C_FLAGS="-fms-compatibility-version=19"
+    CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19" -DCMAKE_C_FLAGS="-fms-compatibility-version=19"
 
   # Clang targeting mingw-w64
   - GENERATOR: MinGW Makefiles
