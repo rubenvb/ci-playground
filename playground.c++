@@ -1,9 +1,14 @@
 #include <utility>
+#include <iostream>
+#ifdef __MINGW32__
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+#else
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#endif
 
 int main()
-{
-    int i=42;
-    const auto f = [i{std::move(i)}] { return i; };
-    
-    return f();
+{    
+    std::cout << fs::current_path() << '\n';
 }
