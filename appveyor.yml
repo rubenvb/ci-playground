@@ -1,39 +1,67 @@
 environment:
   matrix:
-  # MSVC
-  - GENERATOR: Visual Studio 14 2015
+  - TOOLCHAIN: "Visual Studio 2017 x86"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Visual Studio 15 2017
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: x86
+  - TOOLCHAIN: "Visual Studio 2017 x64"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Visual Studio 15 2017 Win64
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: amd64
+  - TOOLCHAIN: "Visual Studio 2015 x86"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Visual Studio 14 2015
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: x86
-  - GENERATOR: Visual Studio 14 2015 Win64
+  - TOOLCHAIN: "Visual Studio 2015 x64"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Visual Studio 14 2015 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
 
   # Mingw-w64
-  - GENERATOR: MinGW Makefiles
-    PACMAN_PACKAGES: "mingw-w64-x86_64-boost"
+  - TOOLCHAIN: "MinGW-w64 GCC"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: MinGW Makefiles
+    PACMAN_PACKAGES: "mingw-w64-x86_64-{gcc,boost}"
     PATH: C:\msys64\mingw64\bin;%PATH%
 
   # Clang/C2
-  - GENERATOR: Visual Studio 14 2015 Win64
+  - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: Visual Studio 15 2017 Win64
+    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    VCVARSARG: amd64
+    CMAKE_ARGS: -T"v141_clang_c2"
+  - TOOLCHAIN: "Visual Studio 2015 Clang/C2"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    GENERATOR: Visual Studio 15 2017 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
     CMAKE_ARGS: -T"v140_clang_c2"
 
   # Clang targeting MSVC
-  - GENERATOR: Visual Studio 14 2015 Win64
+  - TOOLCHAIN: "Visual Studio 2015 Clang/LLVM"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    GENERATOR: Visual Studio 15 2017 Win64
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
-    CMAKE_ARGS: -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_C_COMPILER="C:/Program Files/LLVM/msbuild-bin/cl.exe" -DCMAKE_CXX_FLAGS="-fms-compatibility-version=19" -DCMAKE_C_FLAGS="-fms-compatibility-version=19"
+    CMAKE_ARGS: -T"LLVM-vs2014"
 
   # Clang targeting mingw-w64
-  - GENERATOR: MinGW Makefiles
-    PATH: C:\msys64\mingw64\bin;%PATH%
+  - TOOLCHAIN: "MinGW-w64 Clang"
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    GENERATOR: MinGW Makefiles
     PACMAN_PACKAGES: "mingw-w64-x86_64-{boost,clang}"
+    PATH: C:\msys64\mingw64\bin;%PATH%
     CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
     
 configuration: Debug
 
 clone_script:
+  - set
   - git clone -q --branch=%APPVEYOR_REPO_BRANCH% https://github.com/rubenvb/ci-playground.git %APPVEYOR_BUILD_FOLDER%
   - cd %APPVEYOR_BUILD_FOLDER%
   - git checkout -qf %APPVEYOR_REPO_COMMIT%
