@@ -15,3 +15,8 @@ target_link_libraries(playground $<$<AND:$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPI
 if(MINGW)
   target_link_libraries(playground Boost::system Boost::regex Boost::filesystem)
 endif()
+
+if((NOT MSVC) OR (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang"))
+  set_source_files_properties(playground.c++ PROPERTIES COMPILE_FLAGS -mssse3)
+endif()
+set(CMAKE_VERBOSE_MAKEFILE TRUE)
