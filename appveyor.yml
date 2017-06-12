@@ -1,64 +1,71 @@
 environment:
   matrix:
-  - TOOLCHAIN: "Visual Studio 2017 x86"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: Visual Studio 15 2017
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
-    VCVARSARG: x86
-  - TOOLCHAIN: "Visual Studio 2017 x64"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: Visual Studio 15 2017 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
-    VCVARSARG: amd64
-  - TOOLCHAIN: "Visual Studio 2015 x86"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: Visual Studio 14 2015
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: x86
-  - TOOLCHAIN: "Visual Studio 2015 x64"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: Visual Studio 14 2015 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: amd64
+  #- TOOLCHAIN: "Visual Studio 2017 x86"
+    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #GENERATOR: Ninja
+    #VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    #VCVARSARG: x86
+  #- TOOLCHAIN: "Visual Studio 2017 x64"
+    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #GENERATOR: Ninja
+    #VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    #VCVARSARG: amd64
+  #- TOOLCHAIN: "Visual Studio 2015 x86"
+    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #GENERATOR: Ninja
+    #VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    #VCVARSARG: x86
+  #- TOOLCHAIN: "Visual Studio 2015 x64"
+    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #GENERATOR: Ninja
+    #VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    #VCVARSARG: amd64
 
-  # Mingw-w64
-  - TOOLCHAIN: "MinGW-w64 GCC"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: MinGW Makefiles
-    PACMAN_PACKAGES: "mingw-w64-x86_64-{gcc,boost}"
-    PATH: C:\msys64\mingw64\bin;%PATH%
+  ## Mingw-w64
+  #- TOOLCHAIN: "MinGW-w64 GCC"
+    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #GENERATOR: MinGW Makefiles
+    #PACMAN_PACKAGES: "mingw-w64-x86_64-{gcc,boost}"
+    #PATH: C:\msys64\mingw64\bin;%PATH%
 
-  # Clang/C2
-  - TOOLCHAIN: "Visual Studio 2017 Clang/C2"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: Visual Studio 15 2017 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -T"v141_clang_c2"
-  - TOOLCHAIN: "Visual Studio 2015 Clang/C2"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    GENERATOR: Visual Studio 15 2017 Win64
-    VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
-    VCVARSARG: amd64
-    CMAKE_ARGS: -T"v140_clang_c2"
+  ## Clang/C2
+  #- TOOLCHAIN: "Visual Studio 2017 Clang/C2"
+    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #GENERATOR: Visual Studio 15 2017 Win64
+    #VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat
+    #VCVARSARG: amd64
+    #CMAKE_ARGS: -T"v141_clang_c2"
+  #- TOOLCHAIN: "Visual Studio 2015 Clang/C2"
+    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    #GENERATOR: Visual Studio 15 2017 Win64
+    #VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+    #VCVARSARG: amd64
+    #CMAKE_ARGS: -T"v140_clang_c2"
 
   # Clang targeting MSVC
   - TOOLCHAIN: "Visual Studio 2015 Clang/LLVM"
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    GENERATOR: Visual Studio 15 2017 Win64
+    GENERATOR: Ninja
     VCVARS: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
     VCVARSARG: amd64
-    CMAKE_ARGS: -T"LLVM-vs2014"
+    CMAKE_ARGS: -DCMAKE_C_COMPILER=clang-cl.exe -DCMAKE_CXX_COMPILER=clang-cl.exe
 
-  # Clang targeting mingw-w64
-  - TOOLCHAIN: "MinGW-w64 Clang"
-    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATOR: MinGW Makefiles
-    PACMAN_PACKAGES: "mingw-w64-x86_64-{boost,clang}"
-    PATH: C:\msys64\mingw64\bin;%PATH%
-    CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
+  ## Clang targeting mingw-w64
+  #- TOOLCHAIN: "MinGW-w64 Clang"
+    #APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #GENERATOR: MinGW Makefiles
+    #PACMAN_PACKAGES: "mingw-w64-x86_64-{boost,clang}"
+    #PATH: C:\msys64\mingw64\bin;%PATH%
+    #CMAKE_ARGS: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
     
 configuration: Debug
+
+install:
+  # Setup Ninja
+  - set NINJA_URL=https://github.com/ninja-build/ninja/releases/download/v1.6.0/ninja-win.zip
+  - appveyor DownloadFile https://github.com/ninja-build/ninja/releases/download/v1.6.0/ninja-win.zip -FileName ninja.zip
+  - 7z x ninja.zip -oC:\projects\deps\ninja > nul
+  - set PATH=C:\projects\deps\ninja;%PATH%
 
 clone_script:
   - set
@@ -70,7 +77,8 @@ clone_script:
 before_build:
   - mkdir build
   - cd build
-  - if defined (VCVARS) call "%VCVARS%" %VCVARSARG%
+  - if defined VCVARS call "%VCVARS%" %VCVARSARG%
+  - call "%VCVARS%" %VCVARSARG%
   - if DEFINED PACMAN_PACKAGES C:\msys64\usr\bin\bash.exe -lc "pacman --needed --noconfirm -S %PACMAN_PACKAGES%"
   - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - cmake %CMAKE_ARGS% -G"%GENERATOR%" -DCMAKE_BUILD_TYPE="%CONFIGURATION%" .. || (type CMakeFiles\CMakeError.log && type CMakeFiles\CMakeOutput.log && exit 1)
